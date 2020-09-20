@@ -1,7 +1,7 @@
 # Board
 
-Solution to a coding dojo task, where a simple reusable model for a game board should be created and visualized. Main focus is on fast development of the solution and not on a polished one.
+A simple dojo task to create a game board with a simple gui, which should be developed in a very short time (approx. 1h). The board code should be reusable and adaptable to different rules.
 
-A simple visualisation on the console is used. See attached screenshot.
+## Implementation
 
-![Screenshot](screenshot.png)
+No rules are implemented. There should be a callback for real applications. Currently, a board with chess figures is shown on the console and the user can input tuples of start/end coordinates in the following form: e4e6, b7b6, …

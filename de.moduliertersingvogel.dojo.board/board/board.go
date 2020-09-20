@@ -1,7 +1,8 @@
 package board
 
 type Stone struct {
-	Type string
+	Symbol []string
+	Color  *string
 }
 
 type Field struct {
@@ -13,7 +14,7 @@ type Board struct {
 	Fields [][]Field
 }
 
-func NewBoard(size int, stonefactory func() Stone, fieldfactory func(x int, y int) Field) Board {
+func NewBoard(size int, fieldfactory func(x int, y int) Field) Board {
 	board := Board{}
 	board.Fields = make([][]Field, size)
 	fields := make([]Field, size*size)
