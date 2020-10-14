@@ -2,6 +2,7 @@ package main
 
 import (
 	"de.moduliertersingvogel.dojo.board/board"
+	"de.moduliertersingvogel.dojo.board/engine"
 	"fmt"
 	"github.com/gookit/color"
 	"strconv"
@@ -125,7 +126,15 @@ func initgame() board.Board {
 }
 
 func eventloop(board board.Board) {
+	active := "white"
 	for {
+		if active == "black" {
+			engine.NextMove(board, active)
+
+			active = "white"
+			continue
+		}
+
 		var text string
 
 		fmt.Scanln(&text)
@@ -147,6 +156,8 @@ func eventloop(board board.Board) {
 		if board.Fields[xcoordfrom-1][ycoordfrom].Stone != nil {
 			board.Fields[xcoordto-1][ycoordto].Stone = &(*(board.Fields[xcoordfrom-1][ycoordfrom].Stone))
 			board.Fields[xcoordfrom-1][ycoordfrom].Stone = nil
+
+			active = "black"
 		} else {
 			continue
 		}
