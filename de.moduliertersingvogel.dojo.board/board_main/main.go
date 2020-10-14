@@ -110,7 +110,7 @@ func initgame() board.Board {
 		board.Fields[6][i].Stone = &blackpawn
 	}
 	board.Fields[0][0].Stone = &whitetower
-	board.Fields[0][0].Stone = &whitetower
+	board.Fields[0][7].Stone = &whitetower
 	board.Fields[0][1].Stone = &whiteknight
 	board.Fields[0][size-2].Stone = &whiteknight
 	board.Fields[0][2].Stone = &whitebishop
