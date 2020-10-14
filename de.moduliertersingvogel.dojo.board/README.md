@@ -6,12 +6,6 @@ A simple dojo task to create a game board with a simple gui, which should be dev
 
 No rules are implemented. There should be a callback for real applications. Currently, a board with chess figures is shown on the console and the user can input tuples of start/end coordinates in the following form: e4e6, b7b6, …
 
-## Requirements
-
-```
-go get github.com/gookit/color
-```
-
 ## Running
 
 ```
