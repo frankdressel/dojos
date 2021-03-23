@@ -3,36 +3,60 @@ package main
 import (
 	"fmt"
 	"moduliertersingvogel.de/graph-coloring/model"
+	"moduliertersingvogel.de/graph-coloring/utils"
 	"os"
 	"strings"
 )
+
+func contains(nodes map[*model.Node]bool, node *model.Node) bool {
+	for n, _ := range nodes {
+		if n == node {
+			return true
+		}
+	}
+	return false
+}
+
+func search(node *model.Node, visited map[*model.Node]bool, colors []int) {
+	if !contains(visited, node) {
+		used_for_neighbors := make(map[int]bool, len(node.Neighbors()))
+		for _, neigh := range node.Neighbors() {
+			used_for_neighbors[neigh.Color] = true
+		}
+		for _, c := range colors {
+			if _, ok := used_for_neighbors[c]; !ok {
+				node.Color = c
+				break
+			}
+		}
+		visited[node] = true
+		for _, n := range node.Neighbors() {
+			search(n, visited, colors)
+		}
+	}
+}
 
 func main() {
 	args := os.Args[1:]
 	if len(args) == 0 {
 		fmt.Println("Usage: graph-coloring <Node1>-<Node2> ...")
 	}
-	ids2node := make(map[string]model.Node)
-	for _, a := range args {
-		split := strings.Split(a, "-")
-		if len(split) > 2 {
-			panic("Invalid argument")
-		}
-
-		n1, ok1 := ids2node[split[0]]
-		n2, ok2 := ids2node[split[1]]
-		if !ok1 {
-			n1 = model.Node{}
-			ids2node[split[0]] = n1
-		}
-		if !ok2 {
-			n2 = model.Node{}
-			ids2node[split[1]] = n2
-		}
-		n1.AddNeighbor(n2)
-		fmt.Println(n1)
-		n2.AddNeighbor(n1)
+	nodelist := utils.Parse(strings.Join(args, " "))
+	colors := make([]int, len(nodelist))
+	for i, _ := range colors {
+		colors[i] = i
 	}
 
-	fmt.Println(ids2node)
+	visited := make(map[*model.Node]bool)
+	for len(visited) < len(nodelist) {
+		for _, n := range nodelist {
+			_, ok := visited[n]
+			if !ok {
+				search(n, visited, colors)
+				break
+			}
+		}
+	}
+	fmt.Println(visited)
+	fmt.Println(nodelist)
 }

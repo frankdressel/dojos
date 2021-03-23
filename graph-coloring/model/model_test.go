@@ -3,7 +3,7 @@ package model
 import "testing"
 
 func TestEmptyNode(t *testing.T) {
-	n := Node{}
+	n := NewNode("1")
 	neigh := n.Neighbors()
 
 	if len(neigh) != 0 {
@@ -11,32 +11,10 @@ func TestEmptyNode(t *testing.T) {
 	}
 }
 
-func TestEqual(t *testing.T) {
-	n1 := Node{}
-	n2 := Node{}
-
-	if !n1.Equal(n2) {
-		t.Errorf("Equal nodes are not equal")
-	}
-	if !n2.Equal(n1) {
-		t.Errorf("Equal nodes are not equal")
-	}
-
-	n3 := Node{}
-	n1 = Node{[]Node{n3}}
-	n2 = Node{[]Node{n3}}
-
-	if !n1.Equal(n2) {
-		t.Errorf("Equal nodes are not equal")
-	}
-	if !n2.Equal(n1) {
-		t.Errorf("Equal nodes are not equal")
-	}
-}
-
 func TestNeighborAddinf(t *testing.T) {
-	n1 := Node{}
-	n2 := Node{}
+	n1 := NewNode("1")
+	n2 := NewNode("2")
+	n3 := NewNode("3")
 
 	if len(n1.Neighbors()) != 0 {
 		t.Errorf("Neighbor list for clean node not empty")
@@ -47,5 +25,18 @@ func TestNeighborAddinf(t *testing.T) {
 	}
 	if len(n2.Neighbors()) != 0 {
 		t.Errorf("Added neighbor not added directional")
+	}
+	n1.AddNeighbor(n3)
+	if len(n1.Neighbors()) != 2 {
+		t.Errorf("Added neighbor not in neighbors list")
+	}
+}
+
+func TestIDs(t *testing.T) {
+	n1 := NewNode("1")
+	n2 := NewNode("2")
+
+	if n1.ID == n2.ID {
+		t.Errorf("IDs of two distinct nodes are IDentical: %s vs. %s", n1.ID, n2.ID)
 	}
 }
