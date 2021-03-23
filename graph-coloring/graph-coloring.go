@@ -9,7 +9,7 @@ import (
 )
 
 func contains(nodes map[*model.Node]bool, node *model.Node) bool {
-	for n, _ := range nodes {
+	for n := range nodes {
 		if n == node {
 			return true
 		}
@@ -43,7 +43,7 @@ func main() {
 	}
 	nodelist := utils.Parse(strings.Join(args, " "))
 	colors := make([]int, len(nodelist))
-	for i, _ := range colors {
+	for i := range colors {
 		colors[i] = i
 	}
 
