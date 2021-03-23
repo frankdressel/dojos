@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func Parse(tuples string) []*model.Node {
+func Parse(tuples string) map[*model.Node]bool {
 	ids2node := make(map[string]*model.Node)
 	for _, a := range strings.Split(tuples, " ") {
 		split := strings.Split(a, "-")
@@ -31,10 +31,35 @@ func Parse(tuples string) []*model.Node {
 		}
 	}
 
-	nodelist := make([]*model.Node, 0)
+	nodelist := make(map[*model.Node]bool)
 	for _, n := range ids2node {
-		nodelist = append(nodelist, n)
+		nodelist[n] = true
 	}
 
 	return nodelist
+}
+
+func findSubgraphs(startNode *model.Node, visited map[*model.Node]bool) {
+	visited[startNode] = true
+	for _, n := range startNode.Neighbors() {
+		if _, ok := visited[n]; !ok {
+			findSubgraphs(n, visited)
+		}
+	}
+}
+
+func Subgraphs(nodelist map[*model.Node]bool) []map[*model.Node]bool {
+	remaining := nodelist
+	var result []map[*model.Node]bool
+	for len(remaining) > 0 {
+		for n := range remaining {
+			subgraph := make(map[*model.Node]bool)
+			findSubgraphs(n, subgraph)
+			result = append(result, subgraph)
+			for s := range subgraph {
+				delete(remaining, s)
+			}
+		}
+	}
+	return result
 }

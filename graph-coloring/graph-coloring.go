@@ -49,7 +49,7 @@ func main() {
 
 	visited := make(map[*model.Node]bool)
 	for len(visited) < len(nodelist) {
-		for _, n := range nodelist {
+		for n := range nodelist {
 			_, ok := visited[n]
 			if !ok {
 				search(n, visited, colors)
@@ -58,7 +58,7 @@ func main() {
 		}
 	}
 	colorNum := make(map[int]int)
-	for _, n := range nodelist {
+	for n := range nodelist {
 		if num, ok := colorNum[n.Color]; ok {
 			colorNum[n.Color] = num + 1
 		} else {
@@ -67,7 +67,7 @@ func main() {
 	}
 	fmt.Printf("%d colors used\n", len(colorNum))
 
-	for _, n := range nodelist {
+	for n := range nodelist {
 		fmt.Printf("Node %s: Color: %d\n", n.ID, n.Color)
 	}
 }
