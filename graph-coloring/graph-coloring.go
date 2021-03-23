@@ -57,6 +57,17 @@ func main() {
 			}
 		}
 	}
-	fmt.Println(visited)
-	fmt.Println(nodelist)
+	colorNum := make(map[int]int)
+	for _, n := range nodelist {
+		if num, ok := colorNum[n.Color]; ok {
+			colorNum[n.Color] = num + 1
+		} else {
+			colorNum[n.Color] = 1
+		}
+	}
+	fmt.Printf("%d colors used\n", len(colorNum))
+
+	for _, n := range nodelist {
+		fmt.Printf("Node %s: Color: %d\n", n.ID, n.Color)
+	}
 }
