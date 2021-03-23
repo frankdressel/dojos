@@ -49,7 +49,10 @@ func findSubgraphs(startNode *model.Node, visited map[*model.Node]bool) {
 }
 
 func Subgraphs(nodelist map[*model.Node]bool) []map[*model.Node]bool {
-	remaining := nodelist
+	remaining := make(map[*model.Node]bool)
+	for k, v := range nodelist {
+		remaining[k] = v
+	}
 	var result []map[*model.Node]bool
 	for len(remaining) > 0 {
 		for n := range remaining {

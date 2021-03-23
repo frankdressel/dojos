@@ -47,16 +47,17 @@ func main() {
 		colors[i] = i
 	}
 
-	visited := make(map[*model.Node]bool)
-	for len(visited) < len(nodelist) {
-		for n := range nodelist {
-			_, ok := visited[n]
-			if !ok {
-				search(n, visited, colors)
-				break
-			}
+	subgraphs := utils.Subgraphs(nodelist)
+	for _, s := range subgraphs {
+		for n := range s {
+			fmt.Println(n)
+			visited := make(map[*model.Node]bool)
+			search(n, visited, colors)
+
+			break
 		}
 	}
+
 	colorNum := make(map[int]int)
 	for n := range nodelist {
 		if num, ok := colorNum[n.Color]; ok {
