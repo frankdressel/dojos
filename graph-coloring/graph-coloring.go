@@ -17,9 +17,9 @@ func contains(nodes map[*model.Node]bool, node *model.Node) bool {
 	return false
 }
 
-func colorAllowed(node *model.Node) bool {
+func colorAllowed(node *model.Node, color int) bool {
 	for _, n := range node.Neighbors() {
-		if node.Color == n.Color {
+		if color == n.Color {
 			return false
 		}
 	}
@@ -52,21 +52,19 @@ func countColorsList(nodelist []*model.Node) map[int]int {
 	return colorNum
 }
 
-func greedy_search(node *model.Node, visited map[*model.Node]bool, colors []int) {
+func greedy_search(node *model.Node, visited map[*model.Node]bool) {
 	if !contains(visited, node) {
-		used_for_neighbors := make(map[int]bool, len(node.Neighbors()))
-		for _, neigh := range node.Neighbors() {
-			used_for_neighbors[neigh.Color] = true
-		}
-		for _, c := range colors {
-			if _, ok := used_for_neighbors[c]; !ok {
+		colorIterator := utils.NewInfiniteIntStream(node.Color + 1)
+		for {
+			c := colorIterator.GetAndIncrement()
+			if colorAllowed(node, c) {
 				node.Color = c
 				break
 			}
 		}
 		visited[node] = true
 		for _, n := range node.Neighbors() {
-			greedy_search(n, visited, colors)
+			greedy_search(n, visited)
 		}
 	}
 }
@@ -85,7 +83,7 @@ func full_search(remaining []*model.Node, visited []*model.Node, max_color int) 
 	}
 	for c := last.Color + 1; c < max_color; c++ {
 		last.Color = c
-		if colorAllowed(last) {
+		if colorAllowed(last, c) {
 			full_search(remaining_new, visited_new, max_color)
 		}
 	}
@@ -97,17 +95,12 @@ func main() {
 		fmt.Println("Usage: graph-coloring <Node1>-<Node2> ...")
 	}
 	nodelist := utils.Parse(strings.Join(args, " "))
-	colors := make([]int, len(nodelist))
-	for i := range colors {
-		colors[i] = i
-	}
 
 	subgraphs := utils.Subgraphs(nodelist)
 	for _, s := range subgraphs {
 		for n := range s {
-			fmt.Println(n)
 			visited := make(map[*model.Node]bool)
-			greedy_search(n, visited, colors)
+			greedy_search(n, visited)
 
 			break
 		}
@@ -115,8 +108,11 @@ func main() {
 
 	colorNum := countColorsMap(nodelist)
 	fmt.Printf("%d colors used\n", len(colorNum))
-
 	for n := range nodelist {
+		fmt.Printf("Node: %s, color: %d\n", n.ID, n.Color)
+	}
+
+	/*for n := range nodelist {
 		fmt.Printf("Node %s: Color: %d\n", n.ID, n.Color)
 	}
 
@@ -127,5 +123,5 @@ func main() {
 			remaining = append(remaining, n)
 		}
 		full_search(remaining, visited, len(s))
-	}
+	}*/
 }

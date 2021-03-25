@@ -6,6 +6,12 @@ import (
 	"testing"
 )
 
+type byNumberOfArguments []map[*model.Node]bool
+
+func (a byNumberOfArguments) Len() int           { return len(a) }
+func (a byNumberOfArguments) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a byNumberOfArguments) Less(i, j int) bool { return len(a[i]) < len(a[j]) }
+
 func TestParse(t *testing.T) {
 	test := "1-2 1-3 2-3 4"
 	parsed := Parse(test)
@@ -32,12 +38,6 @@ func TestParse(t *testing.T) {
 	}
 }
 
-type byNumberOfArguments []map[*model.Node]bool
-
-func (a byNumberOfArguments) Len() int           { return len(a) }
-func (a byNumberOfArguments) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a byNumberOfArguments) Less(i, j int) bool { return len(a[i]) < len(a[j]) }
-
 func TestSubgraphs(t *testing.T) {
 	parsed := Parse("1-2 1-3 2-3 4")
 
@@ -58,5 +58,26 @@ func TestSubgraphs(t *testing.T) {
 	}
 	if len(listOfSubs[1]) != 3 {
 		t.Errorf("Expecting 3 element in smallest cluster but was %d", len(listOfSubs[1]))
+	}
+}
+
+func TestInfiniteIntStreamNext(t *testing.T) {
+	i := NewInfiniteIntStream(0)
+
+	next := i.GetAndIncrement()
+	if next != 0 {
+		t.Errorf("Expected 0 as next but got %d", next)
+	}
+
+	next = i.GetAndIncrement()
+	if next != 1 {
+		t.Errorf("Expected 1 as next but got %d", next)
+	}
+
+	i = NewInfiniteIntStream(6)
+
+	next = i.GetAndIncrement()
+	if next != 6 {
+		t.Errorf("Expected 6 as next but got %d", next)
 	}
 }

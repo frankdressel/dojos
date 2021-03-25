@@ -5,6 +5,13 @@ import (
 	"strings"
 )
 
+type InfiniteIntStream struct {
+	n int
+}
+
+func (i *InfiniteIntStream) GetAndIncrement() int  { n_ := i.n; i.n = i.n + 1; return n_ }
+func NewInfiniteIntStream(n int) InfiniteIntStream { return InfiniteIntStream{n} }
+
 func Parse(tuples string) map[*model.Node]bool {
 	ids2node := make(map[string]*model.Node)
 	for _, a := range strings.Split(tuples, " ") {
