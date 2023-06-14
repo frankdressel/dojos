@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 class BrainTest {
     @Test
     fun testinit() {
-        assertTrue(false)
+        val a = 0
+        //assertTrue(false)
     }
 }

@@ -9,7 +9,6 @@ call vundle#begin()
 " required!
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-airline/vim-airline'
-Plugin 'scrooloose/nerdtree'
 Plugin 'jnurmine/Zenburn'
 Plugin 'scrooloose/syntastic'
 Plugin 'kien/ctrlp.vim'
