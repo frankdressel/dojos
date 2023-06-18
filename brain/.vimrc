@@ -45,6 +45,7 @@ silent! colors zenburn
 set number
 
 " Ctrl-P
+let g:ctrlp_root_markers = ['pom.xml']
 nmap ; :CtrlPBuffer<CR>
 
 " Syntastic
@@ -86,3 +87,7 @@ let g:ycm_language_server = [
   \     'cmdline': [ '/progs/kotlin-language-server/server/build/install/server/bin/kotlin-language-server' ],
   \   },
   \ ]
+
+let g:netrw_winsize = 30
+nnoremap <leader>nc :Lexplore %:p:h<CR>
+nnoremap <Leader>nw :Lexplore<CR>
