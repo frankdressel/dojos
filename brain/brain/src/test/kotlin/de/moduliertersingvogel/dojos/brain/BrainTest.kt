@@ -26,20 +26,20 @@ class BrainTest {
         mockkStatic(::inp)
         mockkStatic(::jumpf)
         mockkStatic(::jumpb)
-        every {outp(any())} returns Unit
-        every {inp(any())} returns Unit
+        every {outp(any())} returns 1
+        every {inp(any())} returns 1
 
-        var test = "><+-.,[]"
+        var test = "++[-><.,]"
         Brain().parse(test)
 
-        verify { moveright(any()) }
-        verify { moveleft(any()) }
-        verify { incr(any()) }
-        verify { decr(any()) }
-        verify { outp(any()) }
-        verify { inp(any()) }
-        verify { jumpf(any(), any()) }
-        verify { jumpb(any(), any()) }
+        verify { moveright(any(), any(), any()) }
+        verify { moveleft(any(), any(), any()) }
+        verify { incr(any(), any(), any()) }
+        verify { decr(any(), any(), any()) }
+        verify { outp(any(), any(), any()) }
+        verify { inp(any(), any(), any()) }
+        verify { jumpf(any(), any(), any()) }
+        verify { jumpb(any(), any(), any()) }
     }
 
     @Test
@@ -61,17 +61,19 @@ class BrainTest {
     @Test
     fun testincr() {
         val state = BrainState()
-        state.tape[0] = 0u
+        state.tape[2] = 0u
+        state.pointer = 2u
         incr(state)
-        assertEquals(1u, state.tape[0])
+        assertEquals(1u, state.tape[2])
     }
 
     @Test
     fun testdecr() {
         val state = BrainState()
-        state.tape[0] = 1u
+        state.tape[2] = 1u
+        state.pointer = 2u
         decr(state)
-        assertEquals(0u, state.tape[0])
+        assertEquals(0u, state.tape[2])
     }
 
     @Test
@@ -95,20 +97,30 @@ class BrainTest {
     }
 
     @Test
-    fun testjumpf() {
-        val state = BrainState()
-        val programm = "[>>>>]"
-        assertEquals(0u, state.pointer)
-        jumpf(state, programm)
-        assertEquals(6u, state.pointer)
+    fun testjumpb() {
+        var state = BrainState()
+        var programm = "[++]"
+        var jumped = jumpb(state, programm, 3)
+        assertEquals(1, jumped)
+
+        state = BrainState()
+        programm = "[++]"
+        state.tape[0] = 1u
+        jumped = jumpb(state, programm, 3)
+        assertEquals(-3, jumped)
     }
 
     @Test
-    fun testjumpb() {
-        val state = BrainState()
-        val programm = "[>>>>]"
-        state.pointer = 6u
-        jumpb(state, programm)
-        assertEquals(0u, state.pointer)
+    fun testjumpf() {
+        var state = BrainState()
+        var programm = "[++]"
+        var jumped = jumpf(state, programm, 0)
+        assertEquals(3, jumped)
+
+        state = BrainState()
+        programm = "[++]"
+        state.tape[0] = 1u
+        jumped = jumpf(state, programm, 3)
+        assertEquals(1, jumped)
     }
 }

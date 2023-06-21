@@ -2,46 +2,56 @@ package de.moduliertersingvogel.dojos.brain
 
 import kotlin.collections.mapOf
 
-fun moveright(state: BrainState) {
+fun moveright(state: BrainState, programm: String = "", index: Int = 0): Int {
     state.pointer = state.pointer + 1u
+    return 1
 }
 
-fun moveleft(state: BrainState) {
+fun moveleft(state: BrainState, programm: String = "", index: Int = 0): Int {
     state.pointer = state.pointer - 1u
+    return 1
 }
 
-fun incr(state: BrainState) {
+fun incr(state: BrainState, programm: String = "", index: Int = 0): Int {
     state.tape[state.pointer.toInt()] = state.tape[state.pointer.toInt()] + 1u
+    return 1
 }
 
-fun decr(state: BrainState) {
+fun decr(state: BrainState, programm: String = "", index: Int = 0): Int {
     state.tape[state.pointer.toInt()] = state.tape[state.pointer.toInt()] - 1u
+    return 1
 }
 
-fun outp(state: BrainState) {
+fun outp(state: BrainState, programm: String = "", index: Int = 0): Int {
     output(state.tape[state.pointer.toInt()])
+    return 1
 }
 
-fun inp(state: BrainState) {
+fun inp(state: BrainState, programm: String = "", index: Int = 0): Int {
     state.tape[state.pointer.toInt()] = input()
+    return 1
 }
 
-fun jumpf(state: BrainState, programm: String) {
-    for(i: Int in state.pointer.toInt() .. programm.length) {
-        if(programm[i] == ']') {
-            state.pointer = (i + 1).toUInt()
-            return
+fun jumpf(state: BrainState, programm: String, index: Int = 0): Int {
+    if(state.tape[state.pointer.toInt()] == 0u) {
+        for(i: Int in 0 .. programm.length - index) {
+            if(programm[index + i] == ']') {
+                return i
+            }
         }
     }
+    return 1
 }
 
-fun jumpb(state: BrainState, programm: String) {
-    for(i: Int in state.pointer.toInt() - 1 downTo 0) {
-        if(programm[i] == '[') {
-            state.pointer = i.toUInt()
-            return
+fun jumpb(state: BrainState, programm: String, index: Int = 0): Int {
+    if(state.tape[state.pointer.toInt()] > 0u) {
+        for(i: Int in 0 .. index) {
+            if(programm[index - i] == '[') {
+                return -1 * i
+            }
         }
     }
+    return 1
 }
 
 class BrainState() {
@@ -54,9 +64,10 @@ class Brain() {
 
     fun parse(programm: String) {
         val state = BrainState()
-        val dict = mapOf('>' to ::moveright,'<' to ::moveleft, '+' to ::incr, '-' to ::decr, ',' to ::outp, '.' to ::inp, '[' to {s: BrainState -> jumpf(s, programm)}, ']' to {s: BrainState -> jumpb(s, programm)})
-        for(i in 0 until programm.length) {
-            dict[programm[i]]?.invoke(state)
+        val dict = mapOf('>' to ::moveright,'<' to ::moveleft, '+' to ::incr, '-' to ::decr, ',' to ::outp, '.' to ::inp, '[' to ::jumpf, ']' to ::jumpb)
+        var i = 0
+        while(i < programm.length) {
+            i = i + dict[programm[i]]!!.invoke(state, programm, i)
         }
     }
 }
