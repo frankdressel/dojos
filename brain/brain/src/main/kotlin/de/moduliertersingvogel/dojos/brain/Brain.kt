@@ -27,10 +27,21 @@ fun inp(state: BrainState) {
 }
 
 fun jumpf(state: BrainState, programm: String) {
-
+    for(i: Int in state.pointer.toInt() .. programm.length) {
+        if(programm[i] == ']') {
+            state.pointer = (i + 1).toUInt()
+            return
+        }
+    }
 }
 
 fun jumpb(state: BrainState, programm: String) {
+    for(i: Int in state.pointer.toInt() - 1 downTo 0) {
+        if(programm[i] == '[') {
+            state.pointer = i.toUInt()
+            return
+        }
+    }
 }
 
 class BrainState() {

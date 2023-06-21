@@ -106,8 +106,9 @@ class BrainTest {
     @Test
     fun testjumpb() {
         val state = BrainState()
-        state.tape[0] = 1u
-        decr(state)
-        assertEquals(0u, state.tape[0])
+        val programm = "[>>>>]"
+        state.pointer = 6u
+        jumpb(state, programm)
+        assertEquals(0u, state.pointer)
     }
 }
