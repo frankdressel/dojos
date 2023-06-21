@@ -62,12 +62,14 @@ class BrainState() {
 class Brain() {
     var position = 0
 
-    fun parse(programm: String) {
+    fun parse(programm: String): Array<UInt> {
         val state = BrainState()
         val dict = mapOf('>' to ::moveright,'<' to ::moveleft, '+' to ::incr, '-' to ::decr, ',' to ::outp, '.' to ::inp, '[' to ::jumpf, ']' to ::jumpb)
         var i = 0
         while(i < programm.length) {
             i = i + dict[programm[i]]!!.invoke(state, programm, i)
         }
+
+        return state.tape
     }
 }

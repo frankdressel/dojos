@@ -123,4 +123,12 @@ class BrainTest {
         jumped = jumpf(state, programm, 3)
         assertEquals(1, jumped)
     }
+
+    @Test
+    fun testparse() {
+        var programm = "++[>+<-]"
+        val parsed = Brain().parse(programm)
+        assertEquals(0u, parsed[0])
+        assertEquals(2u, parsed[1])
+    }
 }
